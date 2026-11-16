@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>スマホのお困りごと相談</title>
+  <style>
+    :root {
+      --bg-page: #F5F6F8;
+      --bg-card: #FFFFFF;
+      --text-main: #111827;
+      --text-sub: #4B5563;
+      --accent: #0056B3;
+      --accent-hover: #004494;
+      --accent-light: #EFF6FF;
+      --border-default: #D1D5DB;
+      --error-bg: #FEF2F2;
+      --error-border: #DC2626;
+      --error-text: #991B1B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", Meiryo, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+      font-size: 18px;
+      padding: 16px 14px 40px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ヘッダー */
+    header {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 18px 16px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .safe-note {
+      font-size: 16px;
+      color: var(--text-sub);
+      background-color: var(--bg-page);
+      padding: 10px 12px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    /* ステップカード */
+    .step-section {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 18px 16px;
+      margin-bottom: 18px;
+      scroll-margin-top: 16px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--accent);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .optional-tag {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-sub);
+      background-color: var(--bg-page);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    /* 選択ボタンリスト */
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 62px;
+      padding: 14px 16px;
+      background-color: var(--bg-card);
+      border: 2px solid var(--border-default);
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: background-color 0.12s ease, border-color 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .option-btn:active {
+      background-color: var(--bg-page);
+    }
+
+    .option-btn[aria-pressed="true"] {
+      border: 3px solid var(--accent);
+      background-color: var(--accent-light);
+      padding: 13px 15px;
+    }
+
+    .option-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-right: 10px;
+    }
+
+    .option-main {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .option-sub {
+      font-size: 15px;
+      color: var(--text-sub);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .check-indicator {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border-default);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background-color: #FFFFFF;
+      color: transparent;
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .option-btn[aria-pressed="true"] .check-indicator {
+      border-color: var(--accent);
+      background-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    /* 自由入力欄 */
+    .input-hint {
+      font-size: 15px;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 96px;
+      padding: 14px;
+      font-size: 18px;
+      font-family: inherit;
+      line-height: 1.5;
+      color: var(--text-main);
+      background-color: #FFFFFF;
+      border: 2px solid var(--border-default);
+      border-radius: 10px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* インラインエラー・案内枠 */
+    .inline-notice {
+      display: none;
+      background-color: var(--error-bg);
+      border: 2px solid var(--error-border);
+      color: var(--error-text);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .inline-notice.visible {
+      display: block;
+    }
+
+    /* 送信エリア */
+    .submit-area {
+      margin-top: 6px;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      min-height: 66px;
+      padding: 16px 20px;
+      background-color: var(--accent);
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 700;
+      font-family: inherit;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 86, 179, 0.25);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:active {
+      background-color: var(--accent-hover);
+      transform: translateY(1px);
+    }
+
+    .submit-note {
+      font-size: 15px;
+      color: var(--text-sub);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* 遷移補助リンク（別タブが開かない環境用） */
+    .fallback-box {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      background-color: var(--accent-light);
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .fallback-box.visible {
+      display: block;
+    }
+
+    .fallback-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: underline;
+      font-size: 18px;
+    }
+
+    /* 確認用プレビュー（折りたたみ） */
+    details.debug-box {
+      margin-top: 32px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    details.debug-box summary {
+      cursor: pointer;
+      font-weight: 700;
+      padding: 4px 0;
+    }
+
+    .preview-content {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .preview-pre {
+      background-color: var(--bg-page);
+      padding: 10px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-size: 13px;
+      color: var(--text-main);
+      border: 1px solid var(--border-default);
+    }
+
+    .copy-btn {
+      align-self: flex-start;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      background-color: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>スマホのお困りごと相談</h1>
+      <p class="safe-note">無料で使えます。変なボタンを押してもスマホは壊れません。</p>
+    </header>
+
+    <!-- ステップ1 -->
+    <section class="step-section" id="step1-section" aria-labelledby="step1-heading">
+      <div class="step-header">
+        <span class="step-badge">1</span>
+        <h2 class="step-title" id="step1-heading">どんなスマホですか？</h2>
+      </div>
+      <div class="option-list" role="group" aria-labelledby="step1-heading">
+        <button type="button" class="option-btn" data-group="device" data-value="iphone" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">iPhone（リンゴのマーク）</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+
+        <button type="button" class="option-btn" data-group="device" data-value="other" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">それ以外のスマホ</span>
+            <span class="option-sub">らくらくスマホ・SONY・シャープなど</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+
+        <button type="button" class="option-btn" data-group="device" data-value="unknown" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">わからない</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ステップ2 -->
+    <section class="step-section" id="step2-section" aria-labelledby="step2-heading">
+      <div class="step-header">
+        <span class="step-badge">2</span>
+        <h2 class="step-title" id="step2-heading">どう困っていますか？</h2>
+      </div>
+      <div class="option-list" role="group" aria-labelledby="step2-heading">
+        <button type="button" class="option-btn" data-group="issue" data-value="howto" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">やり方がわからない</span>
+            <span class="option-sub">例：写真を送りたい、文字を大きくしたい</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+
+        <button type="button" class="option-btn" data-group="issue" data-value="popup" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">変な画面・通知が出た</span>
+            <span class="option-sub">例：警告みたいな画面が出た、勝手に何か開いた</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+
+        <button type="button" class="option-btn" data-group="issue" data-value="meaning" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">言葉の意味がわからない</span>
+            <span class="option-sub">例：「キャッシュ」「アップデート」って何？</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+
+        <button type="button" class="option-btn" data-group="issue" data-value="broken" aria-pressed="false">
+          <span class="option-text">
+            <span class="option-main">急に動かなくなった</span>
+            <span class="option-sub">例：音が出ない、ネットが繋がらない</span>
+          </span>
+          <span class="check-indicator" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ステップ3 -->
+    <section class="step-section" id="step3-section" aria-labelledby="step3-heading">
+      <div class="step-header">
+        <span class="step-badge">3</span>
+        <h2 class="step-title" id="step3-heading">くわしい内容</h2>
+        <span class="optional-tag">書かなくてもOK</span>
+      </div>
+      <p class="input-hint">キーボードのマイクボタンを押して、声で話しかけて入力してもOKです。</p>
+      <textarea id="detail-input" placeholder="例：LINEで写真を送りたい／画面に赤い文字が出た"></textarea>
+    </section>
+
+    <!-- 送信ボタン -->
+    <div class="submit-area">
+      <div id="inline-notice" class="inline-notice" role="status" aria-live="polite"></div>
+
+      <button type="button" id="submit-btn" class="submit-btn">
+        相談する（答えを見る）
+      </button>
+
+      <p class="submit-note">
+        ※ボタンを押すと、自動で別の画面（ChatGPT）に切り替わって答えが出始めます。<br>
+        ※途中でログイン画面が出たら「ログインせずに続ける」を押してください。
+      </p>
+
+      <div id="fallback-box" class="fallback-box">
+        画面が自動で切り替わらない場合は、下の青い文字を押してください。<br>
+        <a id="fallback-link" class="fallback-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">答えの画面を開く</a>
+      </div>
+    </div>
+
+    <!-- 作成者・家族向けの確認枠 -->
+    <details class="debug-box">
+      <summary>裏側で作られる質問文を確認する（設定確認用）</summary>
+      <div class="preview-content">
+        <div><strong>自動で作られる指示文：</strong></div>
+        <pre id="preview-prompt" class="preview-pre"></pre>
+        <button type="button" id="copy-prompt-btn" class="copy-btn">質問文をコピー</button>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    (function () {
+      const state = {
+        device: "",
+        issue: ""
+      };
+
+      const deviceDescriptions = {
+        iphone: "iPhone（リンゴのマークのスマホ）を使っています。",
+        other: "iPhone以外のスマートフォン（らくらくスマホ、SONY、シャープなど）を使っています。",
+        unknown: "自分が使っているスマホの種類がわかりません。"
+      };
+
+      const issueDescriptions = {
+        howto: "操作のやり方がわからなくて困っています。",
+        popup: "スマホに変な画面や通知が出て困っています。",
+        meaning: "スマホに出てくる言葉の意味がわからなくて困っています。",
+        broken: "スマホが急に動かなくなったり、調子が悪くなったりして困っています。"
+      };
+
+      const optionButtons = document.querySelectorAll(".option-btn");
+      const detailInput = document.getElementById("detail-input");
+      const submitBtn = document.getElementById("submit-btn");
+      const inlineNotice = document.getElementById("inline-notice");
+      const previewPrompt = document.getElementById("preview-prompt");
+      const copyPromptBtn = document.getElementById("copy-prompt-btn");
+      const fallbackBox = document.getElementById("fallback-box");
+      const fallbackLink = document.getElementById("fallback-link");
+
+      function buildPrompt() {
+        const deviceText = state.device
+          ? deviceDescriptions[state.device]
+          : "スマホの種類はまだ選択されていません。";
+
+        const issueText = state.issue
+          ? issueDescriptions[state.issue]
+          : "困っている内容はまだ選択されていません。";
+
+        const rawDetail = detailInput.value.trim();
+        const detailText = rawDetail
+          ? `具体的な状況：「${rawDetail}」`
+          : "具体的な状況：まだ入力されていません（何に困っているか優しく聞いてください）。";
+
+        const extraRules = [];
+        if (state.device === "unknown") {
+          extraRules.push("・機種がわからない状態なので、最初に「スマホの裏側にリンゴのマークはありますか？」など簡単な見分け方から1つだけ質問してください。");
+        }
+        if (state.issue === "popup") {
+          extraRules.push("・変な画面や警告が出て不安になっている可能性が高いため、最初に「大丈夫ですよ、落ち着いて一緒に確認しましょう」と安心させてください。");
+        }
+
+        const lines = [
+          "スマホの操作で困っています。以下のルールを必ず守って案内してください。",
+          "",
+          "【相談者の状況】",
+          "・" + deviceText,
+          "・" + issueText,
+          "・" + detailText,
+          "",
+          "【絶対に守るルール】",
+          "・相手はスマホや専門用語が苦手な方です。カタカナ語や「Android」という言葉は使わないでください。",
+          "・手順を一度に全部書かず、必ず「最初の1つだけ」を短く教えてください。画面のどの位置にある何色のボタンを押すか具体的に書いてください。",
+          ...extraRules,
+          "・回答の最後に、次に聞きそうなことを「1. できたので次へ」「2. 画面が違う・うまくいかない」「3. 言葉の意味を教えて」のように1〜3の番号付き選択肢で出し、「数字だけ返信してください」と案内してください。"
+        ];
+
+        return lines.join("\n");
+      }
+
+      function buildChatGptUrl() {
+        const prompt = buildPrompt();
+        return "https://chatgpt.com/?q=" + encodeURIComponent(prompt);
+      }
+
+      function updatePreview() {
+        previewPrompt.textContent = buildPrompt();
+        fallbackLink.href = buildChatGptUrl();
+      }
+
+      function clearNotice() {
+        inlineNotice.classList.remove("visible");
+        inlineNotice.textContent = "";
+      }
+
+      function showNotice(message, targetElement) {
+        inlineNotice.textContent = message;
+        inlineNotice.classList.add("visible");
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      optionButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const group = btn.getAttribute("data-group");
+          const value = btn.getAttribute("data-value");
+
+          document.querySelectorAll('.option-btn[data-group="' + group + '"]').forEach(function (item) {
+            item.setAttribute("aria-pressed", "false");
+          });
+
+          btn.setAttribute("aria-pressed", "true");
+          state[group] = value;
+
+          clearNotice();
+          updatePreview();
+        });
+      });
+
+      detailInput.addEventListener("input", function () {
+        updatePreview();
+      });
+
+      submitBtn.addEventListener("click", function () {
+        if (!state.device) {
+          showNotice(
+            "上の「1. どんなスマホですか？」から、どれか1つを押してください。",
+            document.getElementById("step1-section")
+          );
+          return;
+        }
+
+        if (!state.issue) {
+          showNotice(
+            "上の「2. どう困っていますか？」から、どれか1つを押してください。",
+            document.getElementById("step2-section")
+          );
+          return;
+        }
+
+        clearNotice();
+        const targetUrl = buildChatGptUrl();
+        fallbackLink.href = targetUrl;
+
+        const opened = window.open(targetUrl, "_blank", "noopener,noreferrer");
+        if (!opened) {
+          fallbackBox.classList.add("visible");
+        }
+      });
+
+      copyPromptBtn.addEventListener("click", function () {
+        const text = buildPrompt();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            copyPromptBtn.textContent = "コピーしました";
+            setTimeout(function () {
+              copyPromptBtn.textContent = "質問文をコピー";
+            }, 2000);
+          });
+        }
+      });
+
+      updatePreview();
+    })();
+  </script>
+</body>
+</html>
