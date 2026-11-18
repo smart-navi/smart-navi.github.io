@@ -85,8 +85,7 @@
         <h2 class="step-title" id="step3-heading">くわしい内容</h2>
         <span class="optional-tag">書かなくてもOK</span>
       </div>
-      <p class="input-hint">キーボードのマイクボタンを押して、声で話しかけて入力してもOKです。</p>
-      <textarea id="detail-input" placeholder="例：LINEで写真を送りたい／画面に赤い文字が出た"></textarea>
+      <textarea id="detail-input" maxlength="140" placeholder="例：LINEで写真を送りたい／画面に赤い文字が出た"></textarea>
     </section>
 
     <!-- 送信ボタン -->
@@ -98,13 +97,13 @@
       </button>
 
       <p class="submit-note">
-        ※ボタンを押すと、自動で別の画面（ChatGPT）に切り替わって答えが出始めます。<br>
-        ※途中でログイン画面が出たら「ログインせずに続ける」を押してください。
+        ※ボタンを押すと、自動でGoogleのAI案内画面に切り替わって答えが出始めます。<br>
+        ※元の画面に戻りたいときは、画面左上の「＜（戻る）」を押してください。
       </p>
 
       <div id="fallback-box" class="fallback-box">
         画面が自動で切り替わらない場合は、下の青い文字を押してください。<br>
-        <a id="fallback-link" class="fallback-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">答えの画面を開く</a>
+        <a id="fallback-link" class="fallback-link" href="https://www.google.com/search?udm=50">答えの画面を開く</a>
       </div>
     </div>
 
